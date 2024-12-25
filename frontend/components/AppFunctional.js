@@ -28,6 +28,7 @@ export default function AppFunctional(props) {
     setSteps(initialSteps);
     setIndex(initialIndex);
   }
+  
 
   function getNextIndex(direction) {
     switch (direction) {
@@ -47,40 +48,70 @@ export default function AppFunctional(props) {
   function move(evt) {
     const direction = evt.target.id;
     const newIndex = getNextIndex(direction);
-    if (newIndex !== index) {
+  
+    if (newIndex === index) {
+      // Invalid move; set a specific message based on direction
+      switch (direction) {
+        case 'left':
+          setMessage("You can't go left");
+          break;
+        case 'right':
+          setMessage("You can't go right");
+          break;
+        case 'up':
+          setMessage("You can't go up");
+          break;
+        case 'down':
+          setMessage("You can't go down");
+          break;
+        default:
+          setMessage('');
+      }
+    } else {
+      // Valid move; update index and steps
       setIndex(newIndex);
       setSteps(steps + 1);
+      setMessage(''); // Clear any previous messages
     }
   }
-
+  
   function onChange(evt) {
     setEmail(evt.target.value);
   }
 
   async function onSubmit(evt) {
     evt.preventDefault();
+    const { x, y } = getXY();
+  
     if (!email.trim()) {
-      setMessage('Please provide a valid email.');
+      setMessage('Ouch: email is required');
       return;
     }
-    const { x, y } = getXY();
+  
     const payload = { x, y, steps, email };
-
+  
     try {
-      const response = await fetch('http://localhost:9000/api/result', {
+      const response = await fetch('http://localhost:9000/api/result', { // replace with actual API endpoint
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
       });
+  
       const data = await response.json();
-      setMessage(data.message || 'Submission successful.');
+  
+      if (data && data.message) {
+        setMessage(data.message);
+      } else {
+        setMessage('Submission successful but no message returned.');
+      }
       setEmail(''); // Clear the email input field
     } catch (error) {
-      setMessage('Error submitting form. Please try again later.');
+      setMessage('An error occurred while submitting the form.');
     }
   }
+  
 
   return (
     <div id="wrapper" className={props.className}>
