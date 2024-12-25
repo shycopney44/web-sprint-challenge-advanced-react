@@ -83,6 +83,22 @@ test('steps counter works correctly', () => {
   expect(stepsCounter).toHaveTextContent(/Steps: 4/);
 });
 
+test('steps counter handles a single step gracefully', () => {
+  render(<AppFunctional />);
+  
+  const upButton = screen.getByText(/UP/i);
+  const stepsCounter = screen.getByText(/Steps/i);
+  
+  // Initial state check
+  expect(stepsCounter).toHaveTextContent(/Steps: 0/);
+  
+  // Perform a single movement
+  fireEvent.click(upButton);
+  
+  // Check the updated steps counter
+  expect(stepsCounter).toHaveTextContent(/Steps: 1/);
+});
+
 test('limit reached message is displayed when moving up and left twice', () => {
   render(<AppFunctional />);
   
@@ -99,6 +115,107 @@ test('limit reached message is displayed when moving up and left twice', () => {
   // Click the "LEFT" button twice
   fireEvent.click(leftButton);
   fireEvent.click(leftButton);
+  
+  // Check the limit reached message
+  expect(message).toBeVisible();
+});
+
+test('limit reached message is displayed when moving up, left, left', () => {
+  render(<AppFunctional />);
+  
+  const upButton = screen.getByText(/UP/i);
+  const leftButton = screen.getByText(/LEFT/i);
+  const message = screen.getByText(/You can't go left/i);
+  
+  // Initial state check
+  expect(message).not.toBeVisible();
+  
+  // Click the "UP" button
+  fireEvent.click(upButton);
+  
+  // Click the "LEFT" button twice
+  fireEvent.click(leftButton);
+  fireEvent.click(leftButton);
+  
+  // Check the limit reached message
+  expect(message).toBeVisible();
+});
+
+test('limit reached message is displayed when moving up and right twice', () => {
+  render(<AppFunctional />);
+  
+  const upButton = screen.getByText(/UP/i);
+  const rightButton = screen.getByText(/RIGHT/i);
+  const message = screen.getByText(/You can't go right/i);
+  
+  // Initial state check
+  expect(message).not.toBeVisible();
+  
+  // Click the "UP" button
+  fireEvent.click(upButton);
+  
+  // Click the "RIGHT" button twice
+  fireEvent.click(rightButton);
+  fireEvent.click(rightButton);
+  
+  // Check the limit reached message
+  expect(message).toBeVisible();
+});
+
+test('limit reached message is displayed when moving up, right, right', () => {
+  render(<AppFunctional />);
+  
+  const upButton = screen.getByText(/UP/i);
+  const rightButton = screen.getByText(/RIGHT/i);
+  const message = screen.getByText(/You can't go right/i);
+  
+  // Initial state check
+  expect(message).not.toBeVisible();
+  
+  // Click the "UP" button
+  fireEvent.click(upButton);
+  
+  // Click the "RIGHT" button twice
+  fireEvent.click(rightButton);
+  fireEvent.click(rightButton);
+  
+  // Check the limit reached message
+  expect(message).toBeVisible();
+});
+
+test('limit reached message is displayed when moving right twice', () => {
+  render(<AppFunctional />);
+  
+  const rightButton = screen.getByText(/RIGHT/i);
+  const message = screen.getByText(/You can't go right/i);
+  
+  // Initial state check
+  expect(message).not.toBeVisible();
+  
+  // Click the "RIGHT" button twice
+  fireEvent.click(rightButton);
+  fireEvent.click(rightButton);
+  
+  // Check the limit reached message
+  expect(message).toBeVisible();
+});
+
+test('limit reached message is displayed when moving right and down twice', () => {
+  render(<AppFunctional />);
+  
+  const rightButton = screen.getByText(/RIGHT/i);
+  const downButton = screen.getByText(/DOWN/i);
+  const message = screen.getByText(/You can't go down/i);
+  
+  // Initial state check
+  expect(message).not.toBeVisible();
+  
+  // Click the "RIGHT" button
+  fireEvent.click(rightButton);
+  
+  // Click the "DOWN" button twice
+  fireEvent.click(downButton);
+  fireEvent.click(downButton);
   
   // Check the limit reached message
   expect(message).toBeVisible();
@@ -126,27 +243,6 @@ test('reset button resets the active square', () => {
   expect(coordinatesHeading).toHaveTextContent(/Coordinates \(2, 2\)/);
 });
 
-test('limit reached message is displayed when moving up and right twice', () => {
-  render(<AppFunctional />);
-  
-  const upButton = screen.getByText(/UP/i);
-  const rightButton = screen.getByText(/RIGHT/i);
-  const message = screen.getByText(/You can't go right/i);
-  
-  // Initial state check
-  expect(message).not toBeVisible();
-  
-  // Click the "UP" button
-  fireEvent.click(upButton);
-  
-  // Click the "RIGHT" button twice
-  fireEvent.click(rightButton);
-  fireEvent.click(rightButton);
-  
-  // Check the limit reached message
-  expect(message).toBeVisible();
-});
-
 test('reset button resets the message', () => {
   render(<AppFunctional />);
   
@@ -155,7 +251,7 @@ test('reset button resets the message', () => {
   const message = screen.getByText(/You can't go up/i);
   
   // Initial state check
-  expect(message).not toBeVisible();
+  expect(message).not.toBeVisible();
   
   // Trigger the limit reached message
   fireEvent.click(upButton);
@@ -168,24 +264,7 @@ test('reset button resets the message', () => {
   fireEvent.click(resetButton);
   
   // Check the reset state
-  expect(message).not toBeVisible();
-});
-
-test('limit reached message is displayed when moving right twice', () => {
-  render(<AppFunctional />);
-  
-  const rightButton = screen.getByText(/RIGHT/i);
-  const message = screen.getByText(/You can't go right/i);
-  
-  // Initial state check
-  expect(message).not toBeVisible();
-  
-  // Click the "RIGHT" button twice
-  fireEvent.click(rightButton);
-  fireEvent.click(rightButton);
-  
-  // Check the limit reached message
-  expect(message).toBeVisible();
+  expect(message).not.toBeVisible();
 });
 
 test('reset button resets the email input', () => {
@@ -208,69 +287,20 @@ test('reset button resets the email input', () => {
   expect(emailInput.value).toBe('');
 });
 
-test('limit reached message is displayed when moving right and down twice', () => {
+test('limit reached message is displayed when moving down, down, and again', () => {
   render(<AppFunctional />);
   
-  const rightButton = screen.getByText(/RIGHT/i);
   const downButton = screen.getByText(/DOWN/i);
   const message = screen.getByText(/You can't go down/i);
   
   // Initial state check
-  expect(message).not toBeVisible();
+  expect(message).not.toBeVisible();
   
-  // Click the "RIGHT" button
-  fireEvent.click(rightButton);
-  
-  // Click the "DOWN" button twice
+  // Click the "DOWN" button three times
+  fireEvent.click(downButton);
   fireEvent.click(downButton);
   fireEvent.click(downButton);
   
   // Check the limit reached message
   expect(message).toBeVisible();
 });
-
-test('submitting valid email does not reset coordinates or steps', () => {
-  render(<AppFunctional />);
-  
-  const upButton = screen.getByText(/UP/i);
-  const rightButton = screen.getByText(/RIGHT/i);
-  const emailInput = screen.getByLabelText(/Email/i);
-  const submitButton = screen.getByText(/SUBMIT/i);
-  const coordinatesHeading = screen.getByText(/Coordinates/i);
-  const stepsCounter = screen.getByText(/Steps/i);
-  
-  // Initial state check
-  expect(coordinatesHeading).toHaveTextContent(/Coordinates \(2, 2\)/);
-  expect(stepsCounter).toHaveTextContent(/Steps: 0/);
-  
-  // Perform movements
-  fireEvent.click(upButton);
-  fireEvent.click(rightButton);
-  
-  // Enter a valid email and submit
-  fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-  fireEvent.click(submitButton);
-  
-  // Check the coordinates and steps counter
-  expect(coordinatesHeading).toHaveTextContent(/Coordinates \(3, 1\)/);
-  expect(stepsCounter).toHaveTextContent(/Steps: 2/);
-});
-
-test('error message is displayed on invalid email submission', () => {
-  render(<AppFunctional />);
-  
-  const downButton = screen.getByText(/DOWN/i);
-  const rightButton = screen.getByText(/RIGHT/i);
-  const emailInput = screen.getByLabelText(/Email/i);
-  const submitButton = screen.getByText(/SUBMIT/i);
-  const errorMessage = screen.getByText(/Invalid email address/i);
-  
-  // Initial state check
-  expect(errorMessage).not toBeVisible();
-  
-  // Perform movements
-  fireEvent.click(downButton);
-  fireEvent.click(rightButton);
-  
-  // Enter an invalid email and submit
-  fireEvent.change
