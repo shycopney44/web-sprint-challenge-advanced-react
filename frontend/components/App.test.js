@@ -134,7 +134,7 @@ test('limit reached message is displayed when moving up and right twice', () => 
   const message = screen.getByText(/You can't go right/i);
   
   // Initial state check
-  expect(message).not.toBeVisible();
+  expect(message).not toBeVisible();
   
   // Click the "UP" button
   fireEvent.click(upButton);
@@ -155,7 +155,7 @@ test('reset button resets the message', () => {
   const message = screen.getByText(/You can't go up/i);
   
   // Initial state check
-  expect(message).not.toBeVisible();
+  expect(message).not toBeVisible();
   
   // Trigger the limit reached message
   fireEvent.click(upButton);
@@ -168,7 +168,7 @@ test('reset button resets the message', () => {
   fireEvent.click(resetButton);
   
   // Check the reset state
-  expect(message).not.toBeVisible();
+  expect(message).not toBeVisible();
 });
 
 test('limit reached message is displayed when moving right twice', () => {
@@ -178,7 +178,7 @@ test('limit reached message is displayed when moving right twice', () => {
   const message = screen.getByText(/You can't go right/i);
   
   // Initial state check
-  expect(message).not.toBeVisible();
+  expect(message).not toBeVisible();
   
   // Click the "RIGHT" button twice
   fireEvent.click(rightButton);
@@ -216,7 +216,7 @@ test('limit reached message is displayed when moving right and down twice', () =
   const message = screen.getByText(/You can't go down/i);
   
   // Initial state check
-  expect(message).not.toBeVisible();
+  expect(message).not toBeVisible();
   
   // Click the "RIGHT" button
   fireEvent.click(rightButton);
@@ -266,11 +266,11 @@ test('error message is displayed on invalid email submission', () => {
   const errorMessage = screen.getByText(/Invalid email address/i);
   
   // Initial state check
-  expect(errorMessage).not.toBeVisible();
+  expect(errorMessage).not toBeVisible();
   
   // Perform movements
   fireEvent.click(downButton);
   fireEvent.click(rightButton);
   
   // Enter an invalid email and submit
-  fireEvent.change(emailInput, { target: { value: 'invalid' }});
+  fireEvent.change
