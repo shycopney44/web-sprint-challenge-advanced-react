@@ -59,11 +59,15 @@ export default function AppFunctional(props) {
 
   async function onSubmit(evt) {
     evt.preventDefault();
+    if (!email.trim()) {
+      setMessage('Please provide a valid email.');
+      return;
+    }
     const { x, y } = getXY();
     const payload = { x, y, steps, email };
-    
+
     try {
-      const response = await fetch('http://localhost:9000/api/result', { // replace with actual API endpoint
+      const response = await fetch('http://localhost:9000/api/result', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,15 +75,10 @@ export default function AppFunctional(props) {
         body: JSON.stringify(payload),
       });
       const data = await response.json();
-      console.log(data); // Log response data
-      if (data && data.message) {
-        setMessage(data.message);
-      } else {
-        setMessage('Submission successful but no message returned.');
-      }
+      setMessage(data.message || 'Submission successful.');
       setEmail(''); // Clear the email input field
     } catch (error) {
-      setMessage('An error occurred while submitting the form.');
+      setMessage('Error submitting form. Please try again later.');
     }
   }
 
@@ -92,7 +91,11 @@ export default function AppFunctional(props) {
       <div id="grid">
         {
           [0, 1, 2, 3, 4, 5, 6, 7, 8].map(idx => (
-            <div key={idx} className={`square${idx === index ? ' active' : ''}`}>
+            <div
+              key={idx}
+              className={`square${idx === index ? ' active' : ''}`}
+              aria-label={idx === index ? 'Current position' : null}
+            >
               {idx === index ? 'B' : null}
             </div>
           ))
@@ -102,15 +105,22 @@ export default function AppFunctional(props) {
         <h3 id="message">{message}</h3>
       </div>
       <div id="keypad">
-        <button id="left" onClick={move}>LEFT</button>
-        <button id="up" onClick={move}>UP</button>
-        <button id="right" onClick={move}>RIGHT</button>
-        <button id="down" onClick={move}>DOWN</button>
-        <button id="reset" onClick={reset}>RESET</button>
+        <button id="left" onClick={move} aria-label="Move left">LEFT</button>
+        <button id="up" onClick={move} aria-label="Move up">UP</button>
+        <button id="right" onClick={move} aria-label="Move right">RIGHT</button>
+        <button id="down" onClick={move} aria-label="Move down">DOWN</button>
+        <button id="reset" onClick={reset} aria-label="Reset the game">RESET</button>
       </div>
       <form onSubmit={onSubmit}>
-        <input id="email" type="email" placeholder="type email" value={email} onChange={onChange}></input>
-        <input id="submit" type="submit"></input>
+        <input
+          id="email"
+          type="email"
+          placeholder="type email"
+          value={email}
+          onChange={onChange}
+          aria-label="Email input"
+        />
+        <input id="submit" type="submit" aria-label="Submit form" />
       </form>
     </div>
   );
