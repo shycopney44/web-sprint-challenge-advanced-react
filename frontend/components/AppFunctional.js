@@ -28,7 +28,6 @@ export default function AppFunctional(props) {
     setSteps(initialSteps);
     setIndex(initialIndex);
   }
-  
 
   function getNextIndex(direction) {
     switch (direction) {
@@ -48,9 +47,8 @@ export default function AppFunctional(props) {
   function move(evt) {
     const direction = evt.target.id;
     const newIndex = getNextIndex(direction);
-  
+
     if (newIndex === index) {
-      // Invalid move; set a specific message based on direction
       switch (direction) {
         case 'left':
           setMessage("You can't go left");
@@ -68,13 +66,12 @@ export default function AppFunctional(props) {
           setMessage('');
       }
     } else {
-      // Valid move; update index and steps
       setIndex(newIndex);
       setSteps(steps + 1);
-      setMessage(''); // Clear any previous messages
+      setMessage('');
     }
   }
-  
+
   function onChange(evt) {
     setEmail(evt.target.value);
   }
@@ -82,55 +79,52 @@ export default function AppFunctional(props) {
   async function onSubmit(evt) {
     evt.preventDefault();
     const { x, y } = getXY();
-  
+
     if (!email.trim()) {
       setMessage('Ouch: email is required');
       return;
     }
-  
+
     const payload = { x, y, steps, email };
-  
+
     try {
-      const response = await fetch('http://localhost:9000/api/result', { // replace with actual API endpoint
+      const response = await fetch('http://localhost:9000/api/result', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
       });
-  
+
       const data = await response.json();
-  
+
       if (data && data.message) {
         setMessage(data.message);
       } else {
         setMessage('Submission successful but no message returned.');
       }
-      setEmail(''); // Clear the email input field
+      setEmail('');
     } catch (error) {
       setMessage('An error occurred while submitting the form.');
     }
   }
-  
 
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">{getXYMessage()}</h3>
-        <h3 id="steps">You moved {steps} times</h3>
+        <h3 id="steps">You moved {steps} {steps === 1 ? 'time' : 'times'}</h3>
       </div>
       <div id="grid">
-        {
-          [0, 1, 2, 3, 4, 5, 6, 7, 8].map(idx => (
-            <div
-              key={idx}
-              className={`square${idx === index ? ' active' : ''}`}
-              aria-label={idx === index ? 'Current position' : null}
-            >
-              {idx === index ? 'B' : null}
-            </div>
-          ))
-        }
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(idx => (
+          <div
+            key={idx}
+            className={`square${idx === index ? ' active' : ''}`}
+            aria-label={idx === index ? 'Current position' : null}
+          >
+            {idx === index ? 'B' : null}
+          </div>
+        ))}
       </div>
       <div className="info">
         <h3 id="message">{message}</h3>
