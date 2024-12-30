@@ -132,7 +132,7 @@ describe('AppFunctional Component', () => {
 
   test('submitting the form with a valid email sends a POST request', async () => {
     const emailInput = screen.getByPlaceholderText(/type email/i);
-    const submitButton = screen.getByText(/submit/i);
+    const submitButton = screen.getByRole('button', { name: /submit/i });
 
     // Simulate entering a valid email
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -159,7 +159,7 @@ describe('AppFunctional Component', () => {
   });
 
   test('displays error message when submitting without email', async () => {
-    const submitButton = screen.getByText(/submit/i);
+    const submitButton = screen.getByRole('button', { name: /submit/i });
 
     // Simulate submitting without entering an email
     fireEvent.click(submitButton);
